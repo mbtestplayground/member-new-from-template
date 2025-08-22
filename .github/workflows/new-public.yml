@@ -1,0 +1,21 @@
+name: Add new repos to team
+
+on:
+  create:
+    types: [created]
+
+jobs:
+  add-to-team:
+    if: ${{ github.event.repository.private == false }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add repo to public team
+        uses: octokit/request-action@v2.x
+        with:
+          route: PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}
+          org: your-org-name
+          team_slug: public-repo-access
+          owner: your-org-name
+          repo: ${{ github.event.repository.name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
